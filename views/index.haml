@@ -1,0 +1,14 @@
+!!! Strict
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title= "Copa Ruby Tour Sur - Argentina 2011"
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %link{ :rel => "stylesheet", :href => "public/styles/website.css" }
+    /[if lt IE 9]
+      %script{ :src => "http://html5shim.googlecode.com/svn/trunk/html5.js" }
+  %body
+    %a{:href => "http://rubyconfargentina.org", :style => "position: absolute; top: 0; left: 0;", :target => "_blank", :title => "Attending Rubyconf Argentina | Nov. 8 + 9 2011"}
+      #rubyconf_badge{:style => "z-index: 99; background-image: url('http://rubyconfargentina.org/images/badges/rubyconf_badge.png');position: absolute; width: 298px; height: 100px;"}
+    #wrapper
+      #content
+        contenido

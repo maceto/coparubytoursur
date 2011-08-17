@@ -1,0 +1,24 @@
+html {
+  height:100%;
+}
+
+html body {
+  background: url("/images/bkg.jpg") repeat scroll center top #6E2821;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html body #wrapper {
+  min-height: 100%;
+  width: 100%;
+}
+
+html body #wrapper #content{
+  margin-left: auto;
+  margin-right: auto;
+  background: #6E2821;
+  min-height: 100%;
+  width: 960px;
+}

@@ -12,3 +12,17 @@
     #wrapper
       #content
         contenido
+        = @message
+        %form{:action => "/players", :method => :post}
+          %ol
+            %li
+              %label{:for => "player[name]"} Name:
+              %input{:type => "text", :name => "player[name]", :class => "text"}
+            %li
+              %label{:for => "player[mail]"} Mail:
+              %input{:type => "text", :name => "player[mail]", :class => "text"}
+            %li
+              %label{:for => "player[twitter]"} Twitter:
+              %input{:type => "text", :name => "player[twitter]", :class => "text"}
+          %input{:type => "submit", :value => "Send", :class => "button"}
+          

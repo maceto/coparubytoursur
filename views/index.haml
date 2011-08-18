@@ -25,4 +25,6 @@
               %label{:for => "player[twitter]"} Twitter:
               %input{:type => "text", :name => "player[twitter]", :class => "text"}
           %input{:type => "submit", :value => "Send", :class => "button"}
-          
+        #players
+          - Player.all.each do |player|
+            = player.name

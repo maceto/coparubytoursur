@@ -3,7 +3,8 @@ require "haml"
 require "datamapper"
 require "dm-sqlite-adapter"
 
-DataMapper.setup(:default, 'sqlite://db/development.db')
+#DataMapper.setup(:default, 'sqlite://db/development.db')
+DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/development.db")
 DataMapper::Logger.new($stdout, :debug)
 
 class Player 

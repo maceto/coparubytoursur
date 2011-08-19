@@ -41,5 +41,9 @@
 
           %input{:type => "submit", :value => "Send", :class => "button"}
         #players
-          - @players.each do |player|
-            = player.name 
+          - @players.group_by{|c| c.country}.each do |country, players|
+            = country
+            %br
+            - players.each do |player|
+              = player.name
+              %br

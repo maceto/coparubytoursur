@@ -4,12 +4,12 @@ require "cuba/test"
 scope do
 
   setup do
-    @valid_attributes = {:name => "Julio", :mail => "email@mail.com", :twitter => "@twitter" }
+    @valid_attributes = {:name => "Julio", :mail => "email@mail.com", :twitter => "@twitter", :country => "Argentina" }
   end
 
   test "load Homepage" do
     visit "/"
-    assert has_content?("contenido")
+    assert has_content?("Copa Ruby Tour Sur")
   end
 
   test "should not save post without name" do |param|
@@ -25,6 +25,11 @@ scope do
 
   test "should not save post without twitter" do |param|
     player = Player.new(@valid_attributes.merge(:twitter => nil))
+    assert !player.save
+  end
+
+  test "should not save post without country" do |param|
+    player = Player.new(@valid_attributes.merge(:country => nil))
     assert !player.save
   end
 end

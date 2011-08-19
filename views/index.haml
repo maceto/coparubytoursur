@@ -11,10 +11,19 @@
       #rubyconf_badge{:style => "z-index: 99; background-image: url('http://rubyconfargentina.org/images/badges/rubyconf_badge.png');position: absolute; width: 298px; height: 100px;"}
     #wrapper
       #content
-        contenido
+        #website-title
+          Copa Ruby Tour Sur 
+          = Time.now.year
+        #website-text
+          %p
+            En este sitio te podes inscribis para los partidos de futbol previos a la Ruby Conf Argentina 
+            = Time.now.year
+          %p
+            Para participar en los partidos de futbol solo tenes que inscribirte en este sitio, el único requerimiento es que 
+            estes pre-registrado o resgitrado en RubyConfar
         = @message
         %form{:action => "/players", :method => :post}
-          %ol
+          %ul
             %li
               %label{:for => "player[name]"} Name:
               %input{:type => "text", :name => "player[name]", :class => "text"}
@@ -24,6 +33,12 @@
             %li
               %label{:for => "player[twitter]"} Twitter:
               %input{:type => "text", :name => "player[twitter]", :class => "text"}
+            %li
+              %label{:for => "player[country]"} Country:
+              %select{:name => "player[country]"}
+                - ["Argentina","Uruguay","Brasil"].each do |i|
+                  %option{:value => i}= i
+
           %input{:type => "submit", :value => "Send", :class => "button"}
         #players
           - @players.each do |player|

@@ -13,6 +13,7 @@ class Player
   property :name, String, :required => true
   property :mail, String, :required => true
   property :twitter, String, :required => true
+  property :country, String, :required => true
 
 end
 DataMapper.finalize

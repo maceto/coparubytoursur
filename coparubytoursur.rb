@@ -10,9 +10,9 @@ class Player
   include DataMapper::Resource
 
   property :id, Serial
-  property :name, String
-  property :mail, String
-  property :twitter, String
+  property :name, String, :required => true
+  property :mail, String, :required => true
+  property :twitter, String, :required => true
 
 end
 DataMapper.finalize
@@ -26,7 +26,7 @@ Cuba.define do
   on get do
     # /
     on "" do
-      puts "fue get"
+      @players = Player.all(:order => [ :name.desc ])
       res.write render('views/index.haml')
     end
   end

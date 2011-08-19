@@ -12,25 +12,25 @@ scope do
     assert has_content?("Copa Ruby Tour Sur")
   end
 
-  test "should not save post without name" do |param|
+  test "should not be valid post without a name" do |param|
     player = Player.new(@valid_attributes.merge(:name => nil))
-    assert !player.save
+    assert !player.valid?
   end
 
-  test "should not save post without mail" do |param|
+  test "should not be valid post without a mail" do |param|
     player = Player.new(@valid_attributes.merge(:mail => nil))
-    assert !player.save
+    assert !player.valid?
   end
 
 
-  test "should not save post without twitter" do |param|
+  test "should not be valid post without a twitter" do |param|
     player = Player.new(@valid_attributes.merge(:twitter => nil))
-    assert !player.save
+    assert !player.valid?
   end
 
-  test "should not save post without country" do |param|
+  test "should not be valid post without a country" do |param|
     player = Player.new(@valid_attributes.merge(:country => nil))
-    assert !player.save
+    assert !player.valid?
   end
 end
 

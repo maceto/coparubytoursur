@@ -34,3 +34,26 @@ html body #wrapper #content #website-text {
   padding:15px;
   font-size:14px;
 }
+
+html body #wrapper #content ul.form {
+  display: inline-block;
+  height: 26px;
+  width: 100%;
+}
+
+html body #wrapper #content li.form-field {
+  list-style: none outside none;
+  float:left;
+  margin: 0 15px 0 0;
+}
+
+html body #wrapper #content #players {
+  width:100%;
+  height:500px;
+}
+
+html body #wrapper #content #players .country{
+  width:25%;
+  float:left;
+  padding: 5px;
+}

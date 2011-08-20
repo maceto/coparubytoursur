@@ -23,18 +23,18 @@
             estes pre-registrado o resgitrado en RubyConfar
         = @message
         %form{:action => "/players", :method => :post}
-          %ul
-            %li
-              %label{:for => "player[name]"} Name:
+          %ul.form
+            %li.form-field
+              %label{:for => "player[name]"} Nombre:
               %input{:type => "text", :name => "player[name]", :class => "text"}
-            %li
-              %label{:for => "player[mail]"} Mail:
+            %li.form-field
+              %label{:for => "player[mail]"} eMail:
               %input{:type => "text", :name => "player[mail]", :class => "text"}
-            %li
+            %li.form-field
               %label{:for => "player[twitter]"} Twitter:
               %input{:type => "text", :name => "player[twitter]", :class => "text"}
-            %li
-              %label{:for => "player[country]"} Country:
+            %li.form-field
+              %label{:for => "player[country]"} Pa&iacute;s:
               %select{:name => "player[country]"}
                 - ["Argentina","Uruguay","Brasil"].each do |i|
                   %option{:value => i}= i
@@ -42,8 +42,10 @@
           %input{:type => "submit", :value => "Send", :class => "button"}
         #players
           - @players.group_by{|c| c.country}.each do |country, players|
-            = country
-            %br
-            - players.each do |player|
-              = player.name
+            .country
+              = country
               %br
+              %ul
+                - players.each do |player|
+                  %li
+                    = player.name

@@ -21,7 +21,11 @@
           %p
             Para participar en los partidos de futbol solo tenes que inscribirte en este sitio, el único requerimiento es que 
             estes pre-registrado o resgitrado en RubyConfar
-        = @message
+        .messages
+          %strong
+            - session["message"].split(",").each do |m|
+              = m
+              %br
         %form{:action => "/players", :method => :post}
           %ul.form
             %li.form-field

@@ -11,18 +11,23 @@ class Player
   include DataMapper::Resource
 
   property :id, Serial
-  property :name, String, :required => true
-  property :mail, String, :required => true
-  property :twitter, String, :required => true
-  property :country, String, :required => true
+  property :name, String, :required => true, :messages => { :presence  => 'Nombre es obligatorio.'}
+  property :mail, String, :required => true, :messages => { :presence  => 'eMail es obligatorio.'}
+  property :twitter, String, :required => true, :messages => { :presence  => 'Twitter es obligatorio.'}
+  property :country, String, :required => true, :messages => { :presence  => 'Pais es obligatorio.'}
 
 end
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
 Cuba.use Rack::Static, urls: [ "/public/styles", "/public/images" ]
+Cuba.use Rack::Session::Cookie
 
 Cuba.define do
+
+  def session
+   @session ||= env['rack.session']
+  end
 
   # only GET requests
   on get do
@@ -35,9 +40,19 @@ Cuba.define do
 
   # only POST requests
   on post do
+    message = ""
+    session["message"]= message
     on "players" do
       on param("player") do |player_attributes|
-        Player.create(player_attributes)
+        player = Player.new(player_attributes)
+        if player.save
+          message = "La inscripcion se realizo con exito !!!"
+        else
+          player.errors.each do |e|
+            message += e.join + " ,"
+          end
+        end
+        session["message"]= message
         res.redirect "/"
       end
     end

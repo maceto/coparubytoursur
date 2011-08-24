@@ -5,3 +5,4 @@ datamapper
 dm-sqlite-adapter
 haml
 rack
+shotgun

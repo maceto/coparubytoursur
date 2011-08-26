@@ -3,7 +3,7 @@
   %head
     %title= "Copa Ruby Tour Sur - Argentina 2011"
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %link{ :rel => "stylesheet", :href => "public/styles/website.css" }
+    %link{ :rel => "stylesheet", :href => "/styles/website.css" }
     /[if lt IE 9]
       %script{ :src => "http://html5shim.googlecode.com/svn/trunk/html5.js" }
   %body
@@ -24,8 +24,8 @@
         .messages
           %strong
             - unless session["message"].nil?
-              - session["message"].split(",").each do |m|
-                = m
+              - session["message"].split(",").each do |message|
+                = message
                 %br
         %form{:action => "/players", :method => :post}
           %ul.form

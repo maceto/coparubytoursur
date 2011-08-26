@@ -1,8 +1,9 @@
+capybara
 cuba
 cutest
-capybara
 datamapper
 dm-sqlite-adapter
 haml
 rack
-shotgun
+sass
+shotgun 

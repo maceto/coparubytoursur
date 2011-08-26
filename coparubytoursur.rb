@@ -24,7 +24,7 @@ end
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-Cuba.use Rack::Static, :urls => [ "/public/styles", "/public/images" ]
+Cuba.use Rack::Static, :urls => [ "/styles", "/images" ], :root => "public"
 Cuba.use Rack::Session::Cookie
 
 Cuba.define do

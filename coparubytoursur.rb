@@ -20,10 +20,11 @@ class Player
   property :country, String, :required => true, :messages => { :presence  => 'Pais es obligatorio.'}
 
 end
+
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-Cuba.use Rack::Static, urls: [ "/public/styles", "/public/images" ]
+Cuba.use Rack::Static, :urls => [ "/public/styles", "/public/images" ]
 Cuba.use Rack::Session::Cookie
 
 Cuba.define do

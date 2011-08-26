@@ -1,10 +1,12 @@
 require "cuba"
-require "haml"
-require "net/http"
-require "net/https"
-require "json"
 require "datamapper"
 require "dm-sqlite-adapter"
+require "haml"
+require "json"
+require "net/http"
+require "net/https"
+require "sass"
+require 'tilt'
 require 'yaml'
 
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/development.db")
@@ -24,7 +26,7 @@ end
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-Cuba.use Rack::Static, :urls => [ "/styles", "/images" ], :root => "public"
+Cuba.use Rack::Static, :urls => [ "/js", "/images" ], :root => "public"
 Cuba.use Rack::Session::Cookie
 
 Cuba.define do
@@ -33,6 +35,10 @@ Cuba.define do
   config = YAML::load(File.read('config.yml'))
   eventioz_user = config['config']['user']
   eventioz_password = config['config']['password']
+
+  def sass(file)
+    Tilt.new(File.join(Dir.pwd, file)).render
+  end
 
   def session
    @session ||= env['rack.session']
@@ -69,12 +75,14 @@ Cuba.define do
     attendants.map{|a| a["registration"]["email"]}.include?(email_attendant)
   end
 
-  # only GET requests
   on get do
-    # /
     on "" do
       @players = Player.all(:order => [ :name.desc ])
       res.write render('views/index.haml')
+    end
+
+    on 'website.css' do
+      res.write sass('views/website.sass')
     end
   end
 

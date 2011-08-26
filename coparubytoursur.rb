@@ -37,24 +37,33 @@ Cuba.define do
    @session ||= env['rack.session']
   end
 
-  def authenticate_eventioz(email, password, email_attendant)
-    # get the api_key
-    uri = URI.parse("https://eventioz.com/session.json")
+  def getinfo(url, opts={})
+    o = { :user => "test@mail.com", :pass => "password", :verb => "get", :locale => "es", :api_key => "cero" }.merge(opts)
+
+    if o[:verb] == "post"
+      uri = URI.parse(url)
+    else
+      uri = URI.parse(url + o[:api_key])
+    end
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Post.new(uri.request_uri)
-    request.set_form_data({"login" => email, "password" => password, "locale" => "es"})
+
+    if o[:verb] == "get"
+      puts "get"
+      request = Net::HTTP::Get.new(uri.request_uri)
+    else
+      puts "post"
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.set_form_data({"login" => o[:user], "password" => o[:pass], "locale" => o[:locale]})
+    end
     response = http.request(request)
-    api_key = JSON.parse(response.body)["account"]["api_key"]
-    # get de attendants hash
-    uri = URI.parse("https://eventioz.com/admin/events/rubyconf-argentina-2011/registrations.json?api_key=#{api_key}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Get.new(uri.request_uri)
-    response = http.request(request)
-    attendants = JSON.parse(response.body)
+    response.body
+  end
+
+  def validate_eventioz(email, password, email_attendant)
+    api_key = JSON.parse(getinfo("https://eventioz.com/session.json", {:user => email, :pass => password, :locale => "es", :verb => "post"}))["account"]["api_key"]
+    attendants = JSON.parse(getinfo("https://eventioz.com/admin/events/rubyconf-argentina-2011/registrations.json?api_key=", {:api_key => api_key, :verb => "get" }))
     #puts attendants.map{|a| a["registration"]["email"]}
     attendants.map{|a| a["registration"]["email"]}.include?(email_attendant)
   end
@@ -75,7 +84,7 @@ Cuba.define do
     on "players" do
       on param("player") do |player_attributes|
         player = Player.new(player_attributes)
-        if authenticate_eventioz(eventioz_user, eventioz_password, player_attributes["mail"])
+        if validate_eventioz(eventioz_user, eventioz_password, player_attributes["mail"])
           if player.save
             message = "La inscripcion se realizo con exito !!!"
           else

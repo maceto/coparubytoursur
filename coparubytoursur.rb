@@ -28,6 +28,11 @@ Cuba.use Rack::Session::Cookie
 
 Cuba.define do
 
+  ### Configuration
+  config = YAML::load(File.read('config.yml'))
+  eventioz_user = config['config']['user']
+  eventioz_password = config['config']['password']
+
   def session
    @session ||= env['rack.session']
   end
@@ -53,6 +58,7 @@ Cuba.define do
     #puts attendants.map{|a| a["registration"]["email"]}
     attendants.map{|a| a["registration"]["email"]}.include?(email_attendant)
   end
+
   # only GET requests
   on get do
     # /
@@ -69,7 +75,7 @@ Cuba.define do
     on "players" do
       on param("player") do |player_attributes|
         player = Player.new(player_attributes)
-        if authenticate_eventioz(".com", "N", player_attributes["mail"])
+        if authenticate_eventioz(eventioz_user, eventioz_password, player_attributes["mail"])
           if player.save
             message = "La inscripcion se realizo con exito !!!"
           else

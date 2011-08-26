@@ -23,9 +23,10 @@
             estes pre-registrado o resgitrado en RubyConfar
         .messages
           %strong
-            - session["message"].split(",").each do |m|
-              = m
-              %br
+            - unless session["message"].nil?
+              - session["message"].split(",").each do |m|
+                = m
+                %br
         %form{:action => "/players", :method => :post}
           %ul.form
             %li.form-field

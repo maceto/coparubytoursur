@@ -17,7 +17,13 @@ class Player
 
   property :id, Serial
   property :name, String, :required => true, :messages => { :presence  => 'Nombre es obligatorio.'}
-  property :mail, String, :required => true, :messages => { :presence  => 'eMail es obligatorio.'}
+  property :mail, String, :required => true, :unique => true,
+                          :format   => :email_address,
+                          :messages => {
+                            :presence  => 'El email es obligatorio.',
+                            :is_unique => 'El email ingresado ya existe.',
+                            :format    => 'El formato del email ingresado es erroneo'
+                          }
   property :twitter, String, :required => true, :messages => { :presence  => 'Twitter es obligatorio.'}
   property :country, String, :required => true, :messages => { :presence  => 'Pais es obligatorio.'}
 

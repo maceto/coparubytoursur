@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "cuba"
 require "datamapper"
 require "dm-sqlite-adapter"
@@ -9,81 +10,38 @@ require "sass"
 require 'tilt'
 require 'yaml'
 
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/development.db")
-DataMapper::Logger.new($stdout, :debug)
+APP_CONFIG = YAML::load(File.read('config.yml'))
 
-class Player
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :name, String, :required => true, :messages => { :presence  => 'Nombre es obligatorio.'}
-  property :mail, String, :required => true, :unique => true,
-                          :format   => :email_address,
-                          :messages => {
-                            :presence  => 'El email es obligatorio.',
-                            :is_unique => 'El email ingresado ya existe.',
-                            :format    => 'El formato del email ingresado es erroneo'
-                          }
-  property :twitter, String, :required => true, :messages => { :presence  => 'Twitter es obligatorio.'}
-  property :country, String, :required => true, :messages => { :presence  => 'Pais es obligatorio.'}
-
-end
-
-DataMapper.finalize
-DataMapper.auto_upgrade!
+require File.expand_path('lib/models', File.dirname(__FILE__))
 
 Cuba.use Rack::Static, :urls => [ "/js", "/images" ], :root => "public"
 Cuba.use Rack::Session::Cookie
 
 Cuba.define do
-
-  ### Configuration
-  config = YAML::load(File.read('config.yml'))
-  eventioz_user = config['config']['user']
-  eventioz_password = config['config']['password']
-
+  
   def sass(file)
     Tilt.new(File.join(Dir.pwd, file)).render
   end
 
   def session
-   @session ||= env['rack.session']
+    @session ||= env['rack.session']
   end
 
-  def getinfo(url, opts={})
-    o = { :user => "test@mail.com", :pass => "password", :verb => "get", :locale => "es", :api_key => "cero" }.merge(opts)
-
-    if o[:verb] == "post"
-      uri = URI.parse(url)
+  def flash(message = nil)
+    if message.nil?
+      session.delete('flash')
     else
-      uri = URI.parse(url + o[:api_key])
+      session['flash'] = message
     end
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    if o[:verb] == "get"
-      puts "get"
-      request = Net::HTTP::Get.new(uri.request_uri)
-    else
-      puts "post"
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request.set_form_data({"login" => o[:user], "password" => o[:pass], "locale" => o[:locale]})
-    end
-    response = http.request(request)
-    response.body
   end
 
-  def validate_eventioz(email, password, email_attendant)
-    api_key = JSON.parse(getinfo("https://eventioz.com/session.json", {:user => email, :pass => password, :locale => "es", :verb => "post"}))["account"]["api_key"]
-    attendants = JSON.parse(getinfo("https://eventioz.com/admin/events/rubyconf-argentina-2011/registrations.json?api_key=", {:api_key => api_key, :verb => "get" }))
-    #puts attendants.map{|a| a["registration"]["email"]}
-    attendants.map{|a| a["registration"]["email"]}.include?(email_attendant)
+  def players
+    @players ||= Player.all(:order => [ :name.desc ])
   end
 
   on get do
     on "" do
-      @players = Player.all(:order => [ :name.desc ])
+      @player ||= Player.new
       res.write render('views/index.haml')
     end
 
@@ -94,25 +52,17 @@ Cuba.define do
   end
 
   # only POST requests
-  on post do
+  on post do    
     message = ""
-    session["message"]= message
     on "players" do
       on param("player") do |player_attributes|
-        player = Player.new(player_attributes)
-        if validate_eventioz(eventioz_user, eventioz_password, player_attributes["mail"])
-          if player.save
-            message = "La inscripcion se realizo con exito !!!"
-          else
-            player.errors.each do |e|
-              message += e.join + " ,"
-            end
-          end
+        @player ||= Player.new(player_attributes)
+        if @player.save
+          flash "La inscripción se realizó con éxito!!!"
+          res.redirect "/"
         else
-          message = "Por favor controle su email no figura en la lista de pre registro de la RubyConf Argentina."
+          res.write render('views/index.haml')
         end
-        session["message"]= message
-        res.redirect "/"
       end
     end
   end

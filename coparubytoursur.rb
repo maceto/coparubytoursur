@@ -88,6 +88,7 @@ Cuba.define do
     end
 
     on 'website.css' do
+      res.headers['Content-Type'] = "text/css"
       res.write sass('views/website.sass')
     end
   end

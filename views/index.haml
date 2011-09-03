@@ -1,14 +1,15 @@
-!!! Strict
+!!!
 %html{:xmlns => "http://www.w3.org/1999/xhtml"}
   %head
     %title= "Copa Ruby Tour Sur - Argentina 2011"
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %link{ :rel => "stylesheet", :href => "/styles/website.css" }
+    %link{ :rel => "stylesheet", :href => "/website.css" }
     /[if lt IE 9]
       %script{ :src => "http://html5shim.googlecode.com/svn/trunk/html5.js" }
   %body
     %a{:href => "http://rubyconfargentina.org", :style => "position: absolute; top: 0; left: 0;", :target => "_blank", :title => "Attending Rubyconf Argentina | Nov. 8 + 9 2011"}
       #rubyconf_badge{:style => "z-index: 99; background-image: url('http://rubyconfargentina.org/images/badges/rubyconf_badge.png');position: absolute; width: 298px; height: 100px;"}
+
     #wrapper
       #content
         #website-title
@@ -16,24 +17,24 @@
           = Time.now.year
         #website-text
           %p
-            En este sitio te podes inscribis para los partidos de futbol previos a la Ruby Conf Argentina 
-            = Time.now.year
+            En este sitio te puedes inscribir para los partidos de futbol previos a la RubyConf Argentina #{Time.now.year}
           %p
-            Para participar en los partidos de futbol solo tenes que inscribirte en este sitio, el único requerimiento es que 
-            estes pre-registrado o resgitrado en RubyConfar
+            Para participar solo tienes que inscribirte en este sitio. El único requerimiento es que estés pre-registrado o registrado en RubyConfAr.
+
         .messages
           %strong
             - unless session["message"].nil?
               - session["message"].split(",").each do |message|
                 = message
                 %br
+
         %form{:action => "/players", :method => :post}
           %ul.form
             %li.form-field
               %label{:for => "player[name]"} Nombre:
               %input{:type => "text", :name => "player[name]", :class => "text"}
             %li.form-field
-              %label{:for => "player[mail]"} eMail:
+              %label{:for => "player[mail]"} Email:
               %input{:type => "text", :name => "player[mail]", :class => "text"}
             %li.form-field
               %label{:for => "player[twitter]"} Twitter:
@@ -45,6 +46,7 @@
                   %option{:value => i}= i
 
           %input{:type => "submit", :value => "Send", :class => "button"}
+
         #players
           - @players.group_by{|c| c.country}.each do |country, players|
             .country

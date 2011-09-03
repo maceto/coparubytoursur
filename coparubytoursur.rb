@@ -14,11 +14,18 @@ APP_CONFIG = YAML::load(File.read('config.yml'))
 
 require File.expand_path('lib/models', File.dirname(__FILE__))
 
-Cuba.use Rack::Static, :urls => [ "/js", "/images" ], :root => "public"
+Cuba.use Rack::Static, :urls => [ "/js", "/images", "/fonts" ], :root => "public"
 Cuba.use Rack::Session::Cookie
 
 Cuba.define do
   
+  def link_to(text, url=nil, options={}, &block)
+    url, text = text, capture_haml(&block) if url.nil?
+    capture_haml do
+      haml_tag :a, text, options.merge(:href => url)
+    end
+  end
+
   def sass(file)
     Tilt.new(File.join(Dir.pwd, file)).render
   end
@@ -36,7 +43,7 @@ Cuba.define do
   end
 
   def players
-    @players ||= Player.all(:order => [ :name.desc ])
+    @players ||= Player.all(:order => [ :country.asc, :name.desc ])
   end
 
   on get do

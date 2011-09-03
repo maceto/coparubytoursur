@@ -17,21 +17,24 @@
           = Time.now.year
         #website-text
           %p
-            En este sitio te puedes inscribir para los partidos de futbol previos a la RubyConf Argentina #{Time.now.year}
+            En este sitio te puedes inscribir para los partidos de futbol previos a la 
+            %strong=link_to "RubyConf Argentina #{Time.now.year}", "http://rubyconfargentina.org/"
           %p
-            Para participar solo tienes que inscribirte en este sitio. El único requerimiento es que estés pre-registrado o registrado en RubyConfAr.
-
-        .messages
-          %strong
-            - m =  flash
-            - if m
-              %h2= m
-            - if @player.errors.any?
-              - @player.errors.each do |message|
-                = message
-                %br
+            Para participar solo tienes que inscribirte en este sitio. 
+          %p
+            El único requerimiento es que estés pre-registrado o registrado en 
+            %strong=link_to "RubyConf Argentina #{Time.now.year}", "http://rubyconfargentina.org/"
 
         %form{:action => "/players", :method => :post}
+          - m = flash
+          - if m or @player.errors.any?
+            .messages            
+              - if m
+                .message.info= m
+              - if @player.errors.any?
+                - @player.errors.each do |message|
+                  .message.error= message
+
           %ul.form
             %li.form-field
               %label{:for => "player[email]"} Email:
@@ -48,10 +51,10 @@
           %input{:type => "submit", :value => "Send", :class => "button"}
 
         #players
-          - players.group_by{|c| c.country}.each do |country, players|
+          - players.group_by{|c| c.country }.each do |country, players|
             .country
-              = country
-              %br
+              .name= country
+
               %ul
                 - players.each do |player|
                   %li

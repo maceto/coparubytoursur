@@ -1,6 +1,49 @@
 @charset "utf-8"
+@font-face
+  font-family: 'BebasRegular'
+  src: url('fonts/BEBAS___-webfont.eot')
+  src: url('fonts/BEBAS___-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/BEBAS___-webfont.woff') format('woff'), url('fonts/BEBAS___-webfont.ttf') format('truetype'), url('fonts/BEBAS___-webfont.svg#BebasRegular') format('svg')
+  font-weight: normal
+  font-style: normal
 
-/* CSS RESET. standardizes cross-browser rendering on common elements, neutralizing browsers' built-in stylesheets.
+@font-face
+  font-family: 'MolotRegular'
+  src: url('/fonts/Molot-webfont.eot')
+  src: url('/fonts/Molot-webfont.eot?#iefix') format('embedded-opentype'), url('/fonts/Molot-webfont.woff') format('woff'), url('/fonts/Molot-webfont.ttf') format('truetype'), url('/fonts/Molot-webfont.svg#MolotRegular') format('svg')
+  font-weight: normal
+  font-style: normal
+
+@mixin gradient($from : black, $to : white)
+  background-color: $from
+  background-image: -moz-linear-gradient(top, $from, $to)
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, $from),color-stop(1, $to))
+  background-image: linear-gradient(top, $from, $to)
+
+@mixin text-shadow($horizontal : 1px, $vertical : 1px, $blur : 0, $color : black)
+  text-shadow: $horizontal $vertical $blur $color
+  -webkit-text-shadow: $horizontal $vertical $blur $color
+  filter: dropshadow(color=$color, offx=$horizontal, offy=$vertical)
+
+@mixin center($width : 960px)
+  margin:
+    left: auto
+    right: auto
+  width: $width
+
+@mixin box-shadow($h-shadow : 1px, $v-shadow : 0, $blur : 0, $color: black, $inset : false)
+  $full :  $color $h-shadow $v-shadow $blur
+  @if $inset
+    @if not ($inset == true or $inset == inset)
+      @warn "$inset expected to be true or the inset keyword. Got #{$inset} instead. The box shadow will be inset."
+    $full : $full inset
+  -moz-box-shadow: $full
+  -webkit-box-shadow: $full
+  box-shadow: $full
+
+@mixin rounded($radius)
+  -moz-border-radius: $radius  /* FF1+ */
+  -webkit-border-radius: $radius /* Saf3-4 */
+  border-radius: $radius /* Opera 10.5, IE9, Saf5, Chrome */
 
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td, iframe
   margin: 0
@@ -41,6 +84,20 @@ a, img a
   text-decoration: none
 
 
+$yellow: #f7a924
+$yellow_mustard: #A97417
+$brown: #744f10
+$red100: #ab3124
+$red120: #6e2821
+$red115: #82251d
+$red150: #471915
+$light-blue: #afd8e4
+$gray: #c0b8b9
+
+a
+  @include text-shadow
+  color: $yellow
+  
 html
   height: 100%
 
@@ -50,7 +107,7 @@ html
     height: 100%
     margin: 0
     padding: 0
-    
+
     #wrapper
       min-height: 100%
       width: 100%
@@ -59,27 +116,98 @@ html
         margin-right: auto
         background: #6E2821
         min-height: 100%
-        width: 960px
+        width: 860px
+
         #website-title
+          @include text-shadow
           padding: 20px
-          font-size: 18px
-          color: yellow
+          font-size: 30px
+          color: $yellow
           text-align: center
+          font-family: 'BebasRegular', Arial
+
         #website-text
+          @include rounded(5px)        
+          background-color: $red100
+          border: solid black 1px
+          margin-bottom: 10px
           padding: 15px
-          font-size: 14px
-        ul.form
-          display: inline-block
-          height: 26px
-          width: 100%
-        li.form-field
-          list-style: none outside none
+          p 
+            @include text-shadow(1px, 1px, 0, black)
+            color: $gray
+            font-size: 18px  
+            text-align: center
+            margin: 5px auto
+
+        
+        form
+          @include rounded(5px)
+          border: 1px solid $yellow
+          background-color: $yellow
+          margin-bottom: 15px
+          margin-top: 15px
+          padding: 10px 15px
           float: left
-          margin: 0 15px 0 0
-        #players
-          width: 100%
-          height: 500px
-          .country
-            width: 25%
+          width: 43%
+
+          .messages
+            @include rounded(5px)
+            background-color: $yellow_mustard
+            border: solid 1px black
+            margin-bottom: 10px
+            padding: 10px
+            .message
+              font-size: 14px
+              @include text-shadow(1px, 1px, 0, black)
+              color: $gray
+              width: 100%
+              @include text-shadow
+              &.info
+                color: white
+              &.error
+                color: $red115
+              
+
+          ul.form
+            display: inline-block
             float: left
-            padding: 5px
+            width: 100%
+          
+            li.form-field
+              display: block
+              list-style: none outside none
+              margin-bottom: 5px
+              margin: 0 15px 0 0
+              label
+                width: 150px
+                float: left
+              input
+                width: 180px
+        
+        #players
+          float: right
+          margin-top: 15px
+          width: 49%
+          .country
+            background-color: $yellow_mustard
+            @include rounded(5px)
+            border: 1px solid $gray
+            float: left
+            margin-right: 10px
+            margin-bottom: 10px
+            padding: 5px 10px
+            width: 40%
+
+            .name
+              @include text-shadow
+              color: $yellow
+              font-weight: bold
+              font-family: 'BebasRegular', Arial
+          
+            ul
+              
+              li
+                font-family: "MolotRegular", Arial
+                color: white
+                @include text-shadow
+                letter-spacing: 1px

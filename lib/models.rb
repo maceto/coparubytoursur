@@ -50,6 +50,7 @@ class Player
       hash[a['registration']['email']] = a["registration"]
       hash 
     end
+    puts responses.inspect
     responses
   end
 
